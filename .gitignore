@@ -1,0 +1,13 @@
+# Compiled output
+bin/
+build/
+.gradle/
+*.class
+
+# Local game cache (Jagex assets, symlinked on dev machines)
+cache
+
+# OS / editor cruft
+.DS_Store
+*.iml
+.idea/

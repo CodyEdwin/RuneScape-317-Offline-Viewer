@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.rs317'
+version = '1.0.0'
+
+java {
+    // The 317 client source targets the Java platform of its era but only uses
+    // java.applet / java.awt APIs that are still present in modern JDKs.
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+application {
+    // Standalone launcher that initialises the Jagex cache and opens a JFrame.
+    mainClass = 'Main'
+    run {
+        args = ['10', '0', 'highmem', 'members', '32']
+    }
+}
+
+// Compile the existing decompiled 317 source (root package + 'sign' package)
+// located in src/ so the original compile.bat keeps working too.
+sourceSets {
+    main {
+        java {
+            srcDirs = files('src')
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // No external dependencies: pure JDK (java.applet, java.awt, javax.swing).
+}
+
+tasks.named('jar') {
+    manifest {
+        attributes 'Main-Class': 'Main'
+    }
+}
+
+tasks.register('runOfflineViewer', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'OfflineWorldViewer'
+    standardInput = System.in
+}
